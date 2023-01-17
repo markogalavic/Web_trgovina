@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/styles/prijava.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Prijava</title>
+
+</head>
+<body style="background-color: rgb(4, 48, 79);">
+
+    <div class="cover">    
+
+    </div>
+
+    <div>
+        <h2>
+        <form action ="/" name="myForm" class="data" method="post" style="display: inline;">
+            <label for="username" style="color: rgb(197, 155, 17); font-family:Gabriola; font-size:50px;">Korisničko ime:</label>
+            <br>
+            <input style="color: black; font-family:Gabriola;border-radius: 15px;" type="text" placeholder="" id="username" name="username" value="{{request.form.username}}" >
+            <br>
+            <label for="password" style="color: rgb(197, 155, 17); font-family:Gabriola; font-size:50px; text-align:center; ">Lozinka:</label>
+            <br>
+            <input style="color: black; font-family:Gabriola; border-radius: 15px;" type="password" placeholder="" id="password" name="password" value="{{request.form.password}}">
+            <br>
+            <br>
+            <button style="color: rgb(7, 7, 7); text-align: center; font-family:Gabriola; border-radius: 6px; border-color:lightblue; border: 20px; text-align:center;" type="submit" >Login</button>
+            <h1 style="font-family:Consolas Bold Italic;">{{err}}</h1>
+        </form>
+        </h2>
+        </div>
+
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/styles/index.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+    <title>Procedura</title>
+
+</head>
+<body>
+
+    <div class="cover"> </div>
+
+    <div class="naslov-pt3" style="height: 200px; ">
+      <h1 style="font-size:80px; height: 100px;">PROCEDURE</h1>
+    </div> 
+
+    <div style="margin-left:40px;">
+        <h2 style="color:white; font-family:Gabriola; font-size:50px;"> Procedura koja dodaje proizvod u skladište:   </h2>
+        <br>
+        <h2 style="color:white; font-family:Gabriola;">    
+        DELIMITER // <br>
+        CREATE PROCEDURE dodaj_proizvod (p_id_vrsta INTEGER, p_id_dobavljac INTEGER, p_naziv_proizvoda VARCHAR(70),<br>
+                                         p_aktivan CHAR(1), p_kolicina_u_skladistu INTEGER, p_cijena DECIMAL(10, 2))<br>
+        BEGIN<br>
+            -- aktivan proizvod s tim nazivom već postoji -> javlja grešku:<br>
+            IF (SELECT COUNT(*)<br>
+                    FROM proizvod<br>
+                    WHERE naziv = p_naziv_proizvoda<br>
+                    AND aktivan = 'D') > 0 THEN<br>
+                SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Proizvod već postoji!';<br>
+                <br>
+            -- neaktivan proizvod s tim nazivom već postoji -> aktivira ga:<br>
+            ELSEIF (SELECT COUNT(*)<br>
+                    FROM proizvod<br>
+                    WHERE naziv = p_naziv_proizvoda<br>
+                        AND aktivan = 'N') > 0 THEN<br>
+                UPDATE proizvod<br>
+                    SET aktivan = 'D'<br>
+                    WHERE naziv = p_naziv_proizvoda;<br>
+                    <br>
+            -- inače -> dodaje proizvod:<br>
+            ELSE<br>
+                INSERT INTO proizvod (id_vrsta, id_dobavljac, naziv, aktivan, kolicina_u_skladistu, cijena) VALUES<br>
+                (p_id_vrsta, p_id_dobavljac, p_naziv_proizvoda, p_aktivan, p_kolicina_u_skladistu, p_cijena);<br>
+            END IF;<br>
+            <br>
+        END //<br>
+        DELIMITER ;<br>
+        <br>
+        # Provjera<br>
+        SELECT * FROM proizvod;<br>
+        <br>
+        CALL dodaj_proizvod('7', '6', 'frizider', 'D', '11', 199.99);<br>
+        <br>
+        SELECT * FROM proizvod;
+        </h2>   
+    </div>
+
+        <form action="/procedura/unos">
+            <button class="btn btn-primary" type="submit" name="povpl" style="font-family:Gabriola; margin-left:40px;"><h2><i>Dodaj proizvod</i></h2></button>
+        </form>
+    <br>
+    <br>
+    <div style="margin-left:40px;">
+        <h2 style="font-family:Gabriola;font-size:50px; color:white">Procedura za dodavanje dobavljača: </h2>
+        <h2 style="font-family:Gabriola; color:white">
+        <br>
+        DROP PROCEDURE IF EXISTS dodaj_dobavljaca;<br>
+        <br>
+        DELIMITER //<br>
+        CREATE PROCEDURE dodaj_dobavljaca(n_ime VARCHAR(30), n_prezime VARCHAR(30))<br>
+        BEGIN<br>
+        <br>
+            INSERT INTO dobavljac(ime, prezime) VALUES (n_ime, n_prezime);<br>
+            <br>
+        END //<br>
+        DELIMITER ;<br>
+        <br>
+        SELECT * FROM dobavljac;<br>
+        <br>
+        CALL dodaj_dobavljaca('Mario', 'Marić');<br>
+        <br>
+        SELECT * FROM dobavljac;<br>
+            <br>
+        </h2>
+        </div>
+ 
+        <form action="/procedura/unos2">
+            <button class="btn btn-primary" type="submit" name="unzap" style="font-family:Gabriola; margin-left:40px;"><h2><i>Dodaj dobavljača</i></h2></button>
+        </form>
+    </div>
+    <br>
+    <br>
+
+    <br>
+    <a class="nav-item nav-link" id="pocetna" href="/pocetak" style="font-size:30px; margin-left:25px; font-family:Gabriola;">Početna</a>
+
+</body>
+</html>
